@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HVAC APOSTOLOU CRM</title>
+  
+  <!-- PWA Manifest & Theme Color -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HVAC CRM">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Σύνδεση με το δικό σου αρχείο CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-10">
+
+  <!-- Header / Navbar -->
+  <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30 shadow-lg px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3 cursor-pointer" onclick="showCustomerList()">
+      <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md">
+        <i class="fa-solid font-bold fa-snowflake text-xl"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-lg leading-none text-white">HVAC APOSTOLOU</h1>
+        <p class="text-xs text-slate-400 mt-1">Διαχείριση Πελατών & Σέρβις</p>
+      </div>
+    </div>
+    <button onclick="openCustomerModal()" class="bg-blue-600 hover:bg-blue-500 active:scale-95 text-white px-3.5 py-2 rounded-xl font-medium text-sm flex items-center gap-2 shadow-md transition">
+      <i class="fa-solid fa-user-plus"></i>
+      <span class="hidden sm:inline">Νέος Πελάτης</span>
+    </button>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl w-full mx-auto p-4 flex-1">
+
+    <!-- View 1: Customer List & Search -->
+    <section id="customerListView" class="space-y-4">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" id="searchInput" oninput="filterCustomers()" placeholder="Αναζήτηση πελάτη (Όνομα, Τηλέφωνο, Διεύθυνση)..." 
+               class="w-full bg-slate-800 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm shadow-inner">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-slate-800/80 border border-slate-700/60 p-3.5 rounded-xl flex items-center gap-3">
+          <div class="bg-blue-500/10 text-blue-400 p-2.5 rounded-lg"><i class="fa-solid fa-users text-lg"></i></div>
+          <div>
+            <div id="statTotalCustomers" class="text-xl font-bold text-white">0</div>
+            <div class="text-xs text-slate-400">Σύνολο Πελατών</div>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700/60 p-3.5 rounded-xl flex items-center gap-3">
+          <div class="bg-emerald-500/10 text-emerald-400 p-2.5 rounded-lg"><i class="fa-solid fa-wrench text-lg"></i></div>
+          <div>
+            <div id="statTotalVisits" class="text-xl font-bold text-white">0</div>
+            <div class="text-xs text-slate-400">Σύνολο Επισκέψεων</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="customerCardsContainer" class="space-y-3"></div>
+    </section>
+
+    <!-- View 2: Customer Detail & Visit History -->
+    <section id="customerDetailView" class="hidden space-y-5">
+      <div class="flex items-center justify-between">
+        <button onclick="showCustomerList()" class="text-slate-300 hover:text-white flex items-center gap-2 text-sm font-medium py-1 px-3 bg-slate-800 border border-slate-700 rounded-lg">
+          <i class="fa-solid fa-arrow-left"></i> Πίσω στους Πελάτες
+        </button>
+        <button onclick="openVisitModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-sm font-medium flex items-center gap-2 shadow-md">
+          <i class="fa-solid fa-circle-plus"></i> Νέα Επίσκεψη
+        </button>
+      </div>
+
+      <div id="customerProfileCard" class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl relative overflow-hidden"></div>
+
+      <div class="space-y-3">
+        <h3 class="text-md font-semibold text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-blue-400"></i> Ιστορικό Επισκέψεων & Σέρβις
+        </h3>
+        <div id="visitTimelineContainer" class="space-y-4"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal 1: Add/Edit Customer -->
+  <div id="customerModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h3 class="font-bold text-lg text-white" id="customerModalTitle">Νέος Πελάτης</h3>
+        <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+      </div>
+      <form id="customerForm" onsubmit="handleSaveCustomer(event)" class="space-y-3">
+        <input type="hidden" id="custFormId">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Ονοματεπώνυμο *</label>
+          <input type="text" id="custFormName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Τηλέφωνο *</label>
+            <input type="tel" id="custFormPhone" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Περιοχή / Διεύθυνση *</label>
+            <input type="text" id="custFormAddress" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Κλιματιστικά Πελάτη</label>
+          <input type="text" id="custFormAcUnits" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Σημειώσεις Πρόσβασης</label>
+          <textarea id="custFormNotes" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-700">
+          <button type="button" onclick="closeCustomerModal()" class="px-4 py-2 rounded-xl bg-slate-700 text-slate-300 text-sm">Ακύρωση</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-medium text-sm hover:bg-blue-500">Αποθήκευση</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add/Edit Visit -->
+  <div id="visitModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h3 class="font-bold text-lg text-white" id="visitModalTitle">Καταγραφή Νέας Επίσκεψης</h3>
+        <button onclick="closeVisitModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+      </div>
+      <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
+        <input type="hidden" id="visitFormId">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
+            <input type="date" id="visitFormDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Τύπος Εργασίας *</label>
+            <select id="visitFormType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+              <option value="Σέρβις / Καθαρισμός">Σέρβις / Καθαρισμός</option>
+              <option value="Επισκευή Βλάβης">Επισκευή Βλάβης</option>
+              <option value="Πλήρωση Φρέον">Πλήρωση Φρέον</option>
+              <option value="Εγκατάσταση">Εγκατάσταση</option>
+              <option value="Έλεγχος">Έλεγχος</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Περιγραφή Προβλήματος / Αιτία</label>
+          <input type="text" id="visitFormIssue" placeholder="π.χ. Δεν έψυχε, βουλωμένη αποχέτευση" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Εργασίες & Ανταλλακτικά</label>
+          <textarea id="visitFormAction" rows="2" placeholder="π.χ. Καθαρισμός με χημικό" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Κόστος (€)</label>
+            <input type="number" step="0.01" id="visitFormCost" placeholder="50.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Φωτογραφία</label>
+            <input type="file" id="visitFormPhoto" accept="image/*" capture="environment" onchange="handlePhotoSelect(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
+          </div>
+        </div>
+
+        <div id="photoPreviewContainer" class="hidden relative">
+          <img id="photoPreview" class="w-full h-32 object-cover rounded-xl border border-slate-700">
+          <button type="button" onclick="removePhoto()" class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">&times;</button>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-700">
+          <button type="button" onclick="closeVisitModal()" class="px-4 py-2 rounded-xl bg-slate-700 text-slate-300 text-sm">Ακύρωση</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-medium text-sm hover:bg-emerald-500">Αποθήκευση Επίσκεψης</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Lightbox Image Viewer -->
+  <div id="lightboxModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
+    <img id="lightboxImg" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border border-slate-700">
+  </div>
+
+  <!-- Σύνδεση με το δικό σου αρχείο JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
