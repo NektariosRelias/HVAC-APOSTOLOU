@@ -194,9 +194,6 @@
     <img id="lightboxImg" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border border-slate-700">
   </div>
 
-  
-
-
   <!-- Login Modal -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900 bg-opacity-95 z-50 flex items-center justify-center p-4">
     <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 max-w-sm w-full text-center shadow-xl">
@@ -215,12 +212,12 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compact.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compact.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compact.js"></script>
-  
-  <!-- Main Application Script -->
+  <!-- Firebase SDKs (Compatibility Libraries) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Main Application Script (Πρέπει να εκτελείται ΜΕΤΑ τα Firebase SDKs) -->
   <script src="app.js"></script>
 
 </body>
