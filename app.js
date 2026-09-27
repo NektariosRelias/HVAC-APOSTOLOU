@@ -14,9 +14,6 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore();
 
-// Κρυπτογραφημένο Hash για τον κωδικό 2105 (Δεν φαίνεται ο πραγματικός κωδικός στο GitHub)
-const SAVED_PIN_HASH = "313460f9a2e34ff606001d29bf1a0072b07049e830e71912952467d5e4a3b72f";
-
 // Διαχείριση Κατάστασης (State Management)
 let customers = [];
 let visits = [];
@@ -32,17 +29,8 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Συνάρτηση μετατροπής κειμένου σε SHA-256 Hash
-async function hashPin(pin) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(pin);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// Συνάρτηση Ελέγχου Εισόδου
-async function handleCustomLogin(e) {
+// Συνάρτηση Ελέγχου Εισόδου (με χρήση του APP_PIN από το config.js)
+function handleCustomLogin(e) {
   if (e) e.preventDefault();
   
   const passwordInput = document.getElementById('passcode');
@@ -50,9 +38,7 @@ async function handleCustomLogin(e) {
   const loginError = document.getElementById('loginError');
   const loginModal = document.getElementById('loginModal');
 
-  const inputHash = await hashPin(password);
-
-  if (inputHash === SAVED_PIN_HASH) {
+  if (password === APP_PIN) {
     localStorage.setItem('isAuthenticated', 'true');
     if (loginError) loginError.classList.add('hidden');
     if (loginModal) loginModal.classList.add('hidden');
@@ -465,7 +451,7 @@ async function handleSaveVisit(e) {
   e.preventDefault();
   const id = document.getElementById('visitFormId').value;
   const date = document.getElementById('visitFormDate').value;
-  const type = document.getElementById('visitFormType').value;
+  const type = document.getElementById('visitFormType'].value;
   const issue = document.getElementById('visitFormIssue').value;
   const action = document.getElementById('visitFormAction').value;
   const cost = document.getElementById('visitFormCost').value;
