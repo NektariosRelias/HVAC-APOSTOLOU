@@ -4,9 +4,7 @@ const ASSETS_TO_CACHE = [
   './index.html',
   './style.css',
   './app.js',
-  './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+  './manifest.json'
 ];
 
 // Εγκατάσταση Service Worker & Αποθήκευση αρχείων στη μνήμη (Cache)

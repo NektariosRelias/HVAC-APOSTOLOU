@@ -15,7 +15,7 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 
 // Κρυπτογραφημένο Hash για τον κωδικό 2105 (Ασφαλές για το GitHub)
-const SAVED_PIN_HASH = "313460f9a2e34ff606001d29bf1a0072b07049e830e71912952467d5e4a3b72f";
+const SAVED_PIN_HASH = "9c93522c01b6a1b55b7c5266b2a30f370ab84c4c53c39bdff5732fc565413494";
 
 let customers = [];
 let visits = [];
@@ -64,21 +64,21 @@ async function handleCustomLogin(e) {
   }
 }
 
-// Έλεγχος σύνδεσης κατά τη φόρτωση
-document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    loginForm.addEventListener('submit', handleCustomLogin);
-  }
+// // Έλεγχος σύνδεσης κατά τη φόρτωση
+// document.addEventListener('DOMContentLoaded', () => {
+//   const loginForm = document.getElementById('loginForm');
+//   if (loginForm) {
+//     loginForm.addEventListener('submit', handleCustomLogin);
+//   }
 
-  const loginModal = document.getElementById('loginModal');
-  if (localStorage.getItem('isAuthenticated') === 'true') {
-    if (loginModal) loginModal.classList.add('hidden');
-    initLiveSync();
-  } else {
-    if (loginModal) loginModal.classList.remove('hidden');
-  }
-});
+//   const loginModal = document.getElementById('loginModal');
+//   if (localStorage.getItem('isAuthenticated') === 'true') {
+//     if (loginModal) loginModal.classList.add('hidden');
+//     initLiveSync();
+//   } else {
+//     if (loginModal) loginModal.classList.remove('hidden');
+//   }
+// });
 
 // Ζωντανός Συγχρονισμός με το Firestore
 function initLiveSync() {
