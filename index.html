@@ -141,7 +141,9 @@
       </div>
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
-        <div class="grid grid-cols-2 gap-3">
+        
+        <!-- Διόρθωση: grid-cols-1 στα κινητά για να μην καβαλάει το ένα το άλλο -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
             <input type="date" id="visitFormDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
@@ -157,6 +159,7 @@
             </select>
           </div>
         </div>
+
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Περιγραφή Προβλήματος / Αιτία</label>
           <input type="text" id="visitFormIssue" placeholder="π.χ. Δεν έψυχε, βουλωμένη αποχέτευση" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
@@ -165,14 +168,16 @@
           <label class="block text-xs font-medium text-slate-300 mb-1">Εργασίες & Ανταλλακτικά</label>
           <textarea id="visitFormAction" rows="2" placeholder="π.χ. Καθαρισμός με χημικό" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"></textarea>
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        
+        <!-- Διόρθωση: grid-cols-1 στα κινητά και αφαίρεση του capture για επιλογή από συλλογή ή κάμερα -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Κόστος (€)</label>
             <input type="number" step="0.01" id="visitFormCost" placeholder="50.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Φωτογραφία</label>
-            <input type="file" id="visitFormPhoto" accept="image/*" capture="environment" onchange="handlePhotoSelect(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
+            <input type="file" id="visitFormPhoto" accept="image/*" onchange="handlePhotoSelect(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
           </div>
         </div>
 
