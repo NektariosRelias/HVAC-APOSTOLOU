@@ -451,7 +451,7 @@ async function handleSaveVisit(e) {
   e.preventDefault();
   const id = document.getElementById('visitFormId').value;
   const date = document.getElementById('visitFormDate').value;
-  const type = document.getElementById('visitFormType'].value;
+  const type = document.getElementById('visitFormType').value;
   const issue = document.getElementById('visitFormIssue').value;
   const action = document.getElementById('visitFormAction').value;
   const cost = document.getElementById('visitFormCost').value;
