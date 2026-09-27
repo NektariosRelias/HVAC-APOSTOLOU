@@ -1,6 +1,6 @@
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA-fB4xsx5uDV9jzblGN-wUIzbBlaZi8Nk",
+  apiKey: "AIzaSyClS4lAC7XlTqMdceo4iJvyNO1LtNXntcM",
   authDomain: "hvac-apostolou.firebaseapp.com",
   projectId: "hvac-apostolou",
   storageBucket: "hvac-apostolou.firebasestorage.app",
