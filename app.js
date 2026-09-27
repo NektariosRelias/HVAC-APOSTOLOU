@@ -1,7 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-
-// Your web app's Firebase configuration
+// Ρυθμίσεις Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyA-fB4xsx5uDV9jzbLGn-wUiZbBlaZi8Nk",
   authDomain: "hvac-apostolou.firebaseapp.com",
@@ -11,40 +8,40 @@ const firebaseConfig = {
   appId: "1:481556029907:web:d7b17c8e23001ae9a2cf26"
 };
 
-// Initialize Firebase
+// Αρχικοποίηση Firebase (Compat SDK v8/v9)
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
 
-// Custom Auth Configuration (PIN: 2105)
-const SAVED_PASSWORD_HASH = "313460f9a2e34ff606001d29bf1a0072b07049e830e71912952467d5e4a3b72f";
+// Κρυπτογραφημένο Hash για τον κωδικό 2105 (Δεν φαίνεται ο πραγματικός κωδικός στο GitHub)
+const SAVED_PIN_HASH = "313460f9a2e34ff606001d29bf1a0072b07049e830e71912952467d5e4a3b72f";
 
-// State Management
+// Διαχείριση Κατάστασης (State Management)
 let customers = [];
 let visits = [];
 let selectedCustomerId = null;
 let tempPhotoBase64 = null;
 
-// Register Service Worker for PWA
+// Εγγραφή Service Worker για εφαρμογή PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log('PWA Service Worker Registered'))
-      .catch(err => console.log('Service Worker Failed', err));
+      .then(() => console.log('PWA Service Worker Εγγράφηκε'))
+      .catch(err => console.log('Αποτυχία Service Worker', err));
   });
 }
 
-// Synartisi metatropis keimenou se SHA-256 Hash
-async function hashPassword(password) {
+// Συνάρτηση μετατροπής κειμένου σε SHA-256 Hash
+async function hashPin(pin) {
   const encoder = new TextEncoder();
-  const data = encoder.encode(password);
+  const data = encoder.encode(pin);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Custom Synartisi Elenchou Eisodou
+// Συνάρτηση Ελέγχου Εισόδου
 async function handleCustomLogin(e) {
   if (e) e.preventDefault();
   
@@ -53,22 +50,22 @@ async function handleCustomLogin(e) {
   const loginError = document.getElementById('loginError');
   const loginModal = document.getElementById('loginModal');
 
-  const userHash = await hashPassword(password);
+  const inputHash = await hashPin(password);
 
-  if (userHash === SAVED_PASSWORD_HASH) {
+  if (inputHash === SAVED_PIN_HASH) {
     localStorage.setItem('isAuthenticated', 'true');
     if (loginError) loginError.classList.add('hidden');
     if (loginModal) loginModal.classList.add('hidden');
     initLiveSync();
   } else {
     if (loginError) {
-      loginError.innerText = "Lanthasmenos kodikos!";
+      loginError.innerText = "Λανθασμένος κωδικός!";
       loginError.classList.remove('hidden');
     }
   }
 }
 
-// Elefchos an einai idi syndedemenos
+// Έλεγχος αν ο χρήστης είναι ήδη συνδεδεμένος
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
@@ -84,9 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Zontanos Synchronismos me Firestore
+// Ζωντανός Συγχρονισμός με το Firestore
 function initLiveSync() {
-  // Akroatis gia Pelates
+  // Ακροατής για τους Πελάτες
   db.collection('customers').onSnapshot(snapshot => {
     customers = snapshot.docs.map(doc => ({
       id: doc.id,
@@ -99,10 +96,10 @@ function initLiveSync() {
     }
     updateStats();
   }, error => {
-    console.error("Sfalma synchronismou pelaton: ", error);
+    console.error("Σφάλμα συγχρονισμού πελατών: ", error);
   });
 
-  // Akroatis gia Episkepseis
+  // Ακροατής για τις Επισκέψεις
   db.collection('visits').onSnapshot(snapshot => {
     visits = snapshot.docs.map(doc => ({
       id: doc.id,
@@ -113,7 +110,7 @@ function initLiveSync() {
     }
     updateStats();
   }, error => {
-    console.error("Sfalma synchronismou episkepseon: ", error);
+    console.error("Σφάλμα συγχρονισμού επισκέψεων: ", error);
   });
 }
 
@@ -124,7 +121,7 @@ function updateStats() {
   if (visitElem) visitElem.innerText = visits.length;
 }
 
-// View Switching Logic
+// Λογική Αλλαγής Προβολών (Views)
 function showCustomerList() {
   document.getElementById('customerListView').classList.remove('hidden');
   document.getElementById('customerDetailView').classList.add('hidden');
@@ -140,7 +137,7 @@ function showCustomerDetail(id) {
   renderVisits();
 }
 
-// Render Customer List
+// Προβολή Λίστας Πελατών
 function renderCustomers(filteredData = null) {
   const list = filteredData || customers;
   const container = document.getElementById('customerCardsContainer');
@@ -151,7 +148,7 @@ function renderCustomers(filteredData = null) {
     container.innerHTML = `
       <div class="text-center py-10 bg-slate-800/50 rounded-2xl border border-slate-700/50">
         <i class="fa-solid fa-user-slash text-4xl text-slate-500 mb-3"></i>
-        <p class="text-slate-400 text-sm">Den vrethikan pelates.</p>
+        <p class="text-slate-400 text-sm">Δεν βρέθηκαν πελάτες.</p>
       </div>
     `;
     return;
@@ -159,7 +156,7 @@ function renderCustomers(filteredData = null) {
 
   list.forEach(cust => {
     const custVisits = visits.filter(v => v.customerId === cust.id);
-    const lastVisit = custVisits.length > 0 ? custVisits[custVisits.length - 1].date : 'Kamia episkepsi';
+    const lastVisit = custVisits.length > 0 ? custVisits[custVisits.length - 1].date : 'Καμία επίσκεψη';
 
     const card = document.createElement('div');
     card.className = 'bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl p-4 shadow-md transition cursor-pointer flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3';
@@ -174,24 +171,24 @@ function renderCustomers(filteredData = null) {
           <i class="fa-solid fa-location-dot text-red-400"></i> ${cust.address}
         </p>
         <p class="text-xs text-slate-400 flex items-center gap-2">
-          <i class="fa-solid fa-wind text-cyan-400"></i> ${cust.acUnits || 'Den echoun katagrafei monades'}
+          <i class="fa-solid fa-wind text-cyan-400"></i> ${cust.acUnits || 'Δεν έχουν καταγραφεί μονάδες'}
         </p>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-700/60 pt-2 sm:pt-0">
         <span class="text-xs text-slate-400 bg-slate-900/60 px-2.5 py-1 rounded-lg border border-slate-700">
-          Telefutaia: ${lastVisit}
+          Τελευταία: ${lastVisit}
         </span>
         <div class="flex gap-2" onclick="event.stopPropagation()">
-          <button onclick="editCustomer('${cust.id}')" title="Epexergasia" class="bg-slate-700/50 text-slate-300 hover:bg-slate-600 hover:text-white p-2 rounded-xl border border-slate-600/50 transition">
+          <button onclick="editCustomer('${cust.id}')" title="Επεξεργασία" class="bg-slate-700/50 text-slate-300 hover:bg-slate-600 hover:text-white p-2 rounded-xl border border-slate-600/50 transition">
             <i class="fa-solid fa-pen"></i>
           </button>
-          <button onclick="deleteCustomer('${cust.id}')" title="Diagrafi" class="bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white p-2 rounded-xl border border-red-500/20 transition">
+          <button onclick="deleteCustomer('${cust.id}')" title="Διαγραφή" class="bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white p-2 rounded-xl border border-red-500/20 transition">
             <i class="fa-solid fa-trash"></i>
           </button>
-          <a href="tel:${cust.phone}" title="Klisi" class="bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white p-2 rounded-xl border border-emerald-500/30 transition">
+          <a href="tel:${cust.phone}" title="Κλήση" class="bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white p-2 rounded-xl border border-emerald-500/30 transition">
             <i class="fa-solid fa-phone"></i>
           </a>
-          <a href="https://maps.google.com/?q=${encodeURIComponent(cust.address)}" target="_blank" title="Chartis" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white p-2 rounded-xl border border-blue-500/30 transition">
+          <a href="https://maps.google.com/?q=${encodeURIComponent(cust.address)}" target="_blank" title="Χάρτης" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white p-2 rounded-xl border border-blue-500/30 transition">
             <i class="fa-solid fa-location-arrow"></i>
           </a>
         </div>
@@ -212,7 +209,7 @@ function filterCustomers() {
   renderCustomers(filtered);
 }
 
-// Render Customer Detail Profile
+// Προβολή Προφίλ Πελάτη
 function renderCustomerProfile() {
   const cust = customers.find(c => c.id === selectedCustomerId);
   if (!cust) return;
@@ -235,15 +232,15 @@ function renderCustomerProfile() {
       
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <a href="tel:${cust.phone}" class="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-lg">
-          <i class="fa-solid fa-phone"></i> Klisi
+          <i class="fa-solid fa-phone"></i> Κλήση
         </a>
         <a href="https://maps.google.com/?q=${encodeURIComponent(cust.address)}" target="_blank" class="flex-1 sm:flex-initial bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-lg">
-          <i class="fa-solid fa-map-location-dot"></i> Chartis
+          <i class="fa-solid fa-map-location-dot"></i> Χάρτης
         </a>
-        <button onclick="editCustomer('${cust.id}')" title="Epexergasia" class="bg-slate-700 hover:bg-slate-600 text-slate-200 p-2.5 rounded-xl text-sm transition">
+        <button onclick="editCustomer('${cust.id}')" title="Επεξεργασία" class="bg-slate-700 hover:bg-slate-600 text-slate-200 p-2.5 rounded-xl text-sm transition">
           <i class="fa-solid fa-pen"></i>
         </button>
-        <button onclick="deleteCustomer('${cust.id}')" title="Diagrafi" class="bg-red-600/80 hover:bg-red-600 text-white p-2.5 rounded-xl text-sm transition">
+        <button onclick="deleteCustomer('${cust.id}')" title="Διαγραφή" class="bg-red-600/80 hover:bg-red-600 text-white p-2.5 rounded-xl text-sm transition">
           <i class="fa-solid fa-trash"></i>
         </button>
       </div>
@@ -251,18 +248,18 @@ function renderCustomerProfile() {
 
     <div class="mt-4 pt-4 border-t border-slate-700/70 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
       <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-        <span class="text-slate-400 block font-medium mb-1"><i class="fa-solid fa-wind text-cyan-400"></i> Klimatistika:</span>
-        <span class="text-slate-200">${cust.acUnits || 'Den echoun katagrafei'}</span>
+        <span class="text-slate-400 block font-medium mb-1"><i class="fa-solid fa-wind text-cyan-400"></i> Κλιματιστικά:</span>
+        <span class="text-slate-200">${cust.acUnits || 'Δεν έχουν καταγραφεί'}</span>
       </div>
       <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-        <span class="text-slate-400 block font-medium mb-1"><i class="fa-solid fa-note-sticky text-amber-400"></i> Symeioseis prosvasis:</span>
-        <span class="text-slate-200">${cust.notes || 'Kamia symeiosi'}</span>
+        <span class="text-slate-400 block font-medium mb-1"><i class="fa-solid fa-note-sticky text-amber-400"></i> Σημειώσεις πρόσβασης:</span>
+        <span class="text-slate-200">${cust.notes || 'Καμία σημείωση'}</span>
       </div>
     </div>
   `;
 }
 
-// Render Visit History
+// Προβολή Ιστορικού Επισκέψεων
 function renderVisits() {
   const container = document.getElementById('visitTimelineContainer');
   if (!container) return;
@@ -273,7 +270,7 @@ function renderVisits() {
   if (custVisits.length === 0) {
     container.innerHTML = `
       <div class="text-center py-8 bg-slate-800/40 rounded-xl border border-slate-700/40">
-        <p class="text-slate-400 text-sm">Den iparchei katagegrammeno istoriko episkepseon.</p>
+        <p class="text-slate-400 text-sm">Δεν υπάρχει καταγεγραμμένο ιστορικό επισκέψεων.</p>
       </div>
     `;
     return;
@@ -293,10 +290,10 @@ function renderVisits() {
         </div>
         <div class="flex items-center gap-2">
           ${visit.cost ? `<span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-2.5 py-0.5 rounded-lg border border-emerald-500/20">€${visit.cost}</span>` : ''}
-          <button onclick="editVisit('${visit.id}')" title="Epexergasia Episkepsis" class="text-slate-400 hover:text-blue-400 p-1 text-xs transition">
+          <button onclick="editVisit('${visit.id}')" title="Επεξεργασία Επίσκεψης" class="text-slate-400 hover:text-blue-400 p-1 text-xs transition">
             <i class="fa-solid fa-pen"></i>
           </button>
-          <button onclick="deleteVisit('${visit.id}')" title="Diagrafi Episkepsis" class="text-slate-400 hover:text-red-400 p-1 text-xs transition">
+          <button onclick="deleteVisit('${visit.id}')" title="Διαγραφή Επίσκεψης" class="text-slate-400 hover:text-red-400 p-1 text-xs transition">
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
@@ -304,21 +301,21 @@ function renderVisits() {
 
       ${visit.issue ? `
         <div>
-          <span class="text-xs text-slate-400 font-medium block">Provlima / Aitia:</span>
+          <span class="text-xs text-slate-400 font-medium block">Πρόβλημα / Αιτία:</span>
           <p class="text-sm text-slate-200">${visit.issue}</p>
         </div>
       ` : ''}
 
       ${visit.action ? `
         <div>
-          <span class="text-xs text-slate-400 font-medium block">Ergasies pou eginan:</span>
+          <span class="text-xs text-slate-400 font-medium block">Εργασίες που έγιναν:</span>
           <p class="text-sm text-slate-200">${visit.action}</p>
         </div>
       ` : ''}
 
       ${visit.photo ? `
         <div>
-          <span class="text-xs text-slate-400 font-medium block mb-1">Fotografia Vlavis / Service:</span>
+          <span class="text-xs text-slate-400 font-medium block mb-1">Φωτογραφία Βλάβης / Σέρβις:</span>
           <img src="${visit.photo}" onclick="openLightbox('${visit.photo}')" class="w-24 h-24 object-cover rounded-xl border border-slate-700 cursor-pointer hover:opacity-90 transition shadow-md">
         </div>
       ` : ''}
@@ -327,11 +324,11 @@ function renderVisits() {
   });
 }
 
-// Modal & Form Handlers - Customer
+// Διαχείριση Παραθύρων (Modals) & Φορμών - Πελάτης
 function openCustomerModal() {
   document.getElementById('customerForm').reset();
   document.getElementById('custFormId').value = '';
-  document.getElementById('customerModalTitle').innerText = 'Neos Pelatis';
+  document.getElementById('customerModalTitle').innerText = 'Νέος Πελάτης';
   document.getElementById('customerModal').classList.remove('hidden');
 }
 
@@ -348,7 +345,7 @@ function editCustomer(id) {
   document.getElementById('custFormAddress').value = cust.address;
   document.getElementById('custFormAcUnits').value = cust.acUnits || '';
   document.getElementById('custFormNotes').value = cust.notes || '';
-  document.getElementById('customerModalTitle').innerText = 'Epexergasia Pelati';
+  document.getElementById('customerModalTitle').innerText = 'Επεξεργασία Πελάτη';
   document.getElementById('customerModal').classList.remove('hidden');
 }
 
@@ -356,7 +353,7 @@ async function deleteCustomer(id) {
   const cust = customers.find(c => c.id === id);
   if (!cust) return;
 
-  if (confirm(`Eiste sigouroi oti thelete na diagrapsete ton pelati "${cust.name}"; Tha diagrafei kai olo to istoriko episkepseon tou.`)) {
+  if (confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε τον πελάτη "${cust.name}"; Θα διαγραφεί και όλο το ιστορικό επισκέψεών του.`)) {
     try {
       await db.collection('customers').doc(id).delete();
       
@@ -369,7 +366,7 @@ async function deleteCustomer(id) {
         showCustomerList();
       }
     } catch (error) {
-      alert("Sfalma kata ti diagrafi: " + error.message);
+      alert("Σφάλμα κατά τη διαγραφή: " + error.message);
     }
   }
 }
@@ -393,16 +390,16 @@ async function handleSaveCustomer(e) {
     }
     closeCustomerModal();
   } catch (error) {
-    alert("Sfalma kata tin apothikeusi pelati: " + error.message);
+    alert("Σφάλμα κατά την αποθήκευση πελάτη: " + error.message);
   }
 }
 
-// Modal & Form Handlers - Visit
+// Διαχείριση Παραθύρων (Modals) & Φορμών - Επίσκεψη
 function openVisitModal() {
   document.getElementById('visitForm').reset();
   document.getElementById('visitFormId').value = '';
   document.getElementById('visitFormDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('visitModalTitle').innerText = 'Katagrafi Neas Episkepsis';
+  document.getElementById('visitModalTitle').innerText = 'Καταγραφή Νέας Επίσκεψης';
   tempPhotoBase64 = null;
   document.getElementById('photoPreviewContainer').classList.add('hidden');
   document.getElementById('visitModal').classList.remove('hidden');
@@ -431,16 +428,16 @@ function editVisit(visitId) {
     document.getElementById('photoPreviewContainer').classList.add('hidden');
   }
 
-  document.getElementById('visitModalTitle').innerText = 'Epexergasia Episkepsis';
+  document.getElementById('visitModalTitle').innerText = 'Επεξεργασία Επίσκεψης';
   document.getElementById('visitModal').classList.remove('hidden');
 }
 
 async function deleteVisit(visitId) {
-  if (confirm('Eiste sigouroi oti thelete na diagrapsete auti tin episkepsi;')) {
+  if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την επίσκεψη;')) {
     try {
       await db.collection('visits').doc(visitId).delete();
     } catch (error) {
-      alert("Sfalma kata ti diagrafi episkepsis: " + error.message);
+      alert("Σφάλμα κατά τη διαγραφή επίσκεψης: " + error.message);
     }
   }
 }
@@ -491,11 +488,11 @@ async function handleSaveVisit(e) {
     }
     closeVisitModal();
   } catch (error) {
-    alert("Sfalma kata tin apothikeusi episkepsis: " + error.message);
+    alert("Σφάλμα κατά την αποθήκευση επίσκεψης: " + error.message);
   }
 }
 
-// Lightbox Controls
+// Χειρισμός Προβολής Εικόνων (Lightbox)
 function openLightbox(src) {
   document.getElementById('lightboxImg').src = src;
   document.getElementById('lightboxModal').classList.remove('hidden');

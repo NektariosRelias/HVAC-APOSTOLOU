@@ -98,7 +98,7 @@
     <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
         <h3 class="font-bold text-lg text-white" id="customerModalTitle">Νέος Πελάτης</h3>
-        <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+        <button type="button" onclick="closeCustomerModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
       </div>
       <form id="customerForm" onsubmit="handleSaveCustomer(event)" class="space-y-3">
         <input type="hidden" id="custFormId">
@@ -137,7 +137,7 @@
     <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
         <h3 class="font-bold text-lg text-white" id="visitModalTitle">Καταγραφή Νέας Επίσκεψης</h3>
-        <button onclick="closeVisitModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+        <button type="button" onclick="closeVisitModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
       </div>
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
@@ -148,7 +148,7 @@
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Τύπος Εργασίας *</label>
-            <select id="visitFormType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+            <select id="visitFormType" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
               <option value="Σέρβις / Καθαρισμός">Σέρβις / Καθαρισμός</option>
               <option value="Επισκευή Βλάβης">Επισκευή Βλάβης</option>
               <option value="Πλήρωση Φρέον">Πλήρωση Φρέον</option>
@@ -177,7 +177,7 @@
         </div>
 
         <div id="photoPreviewContainer" class="hidden relative">
-          <img id="photoPreview" class="w-full h-32 object-cover rounded-xl border border-slate-700">
+          <img id="photoPreview" class="w-full h-32 object-cover rounded-xl border border-slate-700" alt="Προεπισκόπηση φωτογραφίας">
           <button type="button" onclick="removePhoto()" class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">&times;</button>
         </div>
 
@@ -191,7 +191,7 @@
 
   <!-- Modal 3: Lightbox Image Viewer -->
   <div id="lightboxModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
-    <img id="lightboxImg" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border border-slate-700">
+    <img id="lightboxImg" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border border-slate-700" alt="Μεγεθυμένη φωτογραφία">
   </div>
 
   <!-- Login Modal -->
@@ -217,7 +217,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-  <!-- Main Application Script (Πρέπει να εκτελείται ΜΕΤΑ τα Firebase SDKs) -->
+  <!-- Main Application Script -->
   <script src="app.js"></script>
 
 </body>
