@@ -1,12 +1,20 @@
-// Firebase Configuration
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyClS4lAC7XlTqMdceo4iJvyNO1LtNXntcM",
+  apiKey: "AIzaSyA-fB4xsx5uDV9jzbLGn-wUiZbBlaZi8Nk",
   authDomain: "hvac-apostolou.firebaseapp.com",
   projectId: "hvac-apostolou",
   storageBucket: "hvac-apostolou.firebasestorage.app",
   messagingSenderId: "481556029907",
   appId: "1:481556029907:web:d7b17c8e23001ae9a2cf26"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 // Αρχικοποίηση Firebase
 if (!firebase.apps.length) {
