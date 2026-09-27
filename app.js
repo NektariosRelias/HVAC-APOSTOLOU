@@ -8,19 +8,21 @@ const firebaseConfig = {
   appId: "1:481556029907:web:d7b17c8e23001ae9a2cf26"
 };
 
-// Αρχικοποίηση Firebase (Compat SDK v8/v9)
+// Αρχικοποίηση Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
 
-// Διαχείριση Κατάστασης (State Management)
+// Κρυπτογραφημένο Hash για τον κωδικό 2105 (Ασφαλές για το GitHub)
+const SAVED_PIN_HASH = "313460f9a2e34ff606001d29bf1a0072b07049e830e71912952467d5e4a3b72f";
+
 let customers = [];
 let visits = [];
 let selectedCustomerId = null;
 let tempPhotoBase64 = null;
 
-// Εγγραφή Service Worker για εφαρμογή PWA
+// Εγγραφή Service Worker για PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -29,8 +31,17 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Συνάρτηση Ελέγχου Εισόδου (με χρήση του APP_PIN από το config.js)
-function handleCustomLogin(e) {
+// Συνάρτηση μετατροπής σε SHA-256 Hash
+async function hashPin(pin) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(pin);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Συνάρτηση Ελέγχου Εισόδου
+async function handleCustomLogin(e) {
   if (e) e.preventDefault();
   
   const passwordInput = document.getElementById('passcode');
@@ -38,7 +49,9 @@ function handleCustomLogin(e) {
   const loginError = document.getElementById('loginError');
   const loginModal = document.getElementById('loginModal');
 
-  if (password === APP_PIN) {
+  const inputHash = await hashPin(password);
+
+  if (inputHash === SAVED_PIN_HASH) {
     localStorage.setItem('isAuthenticated', 'true');
     if (loginError) loginError.classList.add('hidden');
     if (loginModal) loginModal.classList.add('hidden');
@@ -51,7 +64,7 @@ function handleCustomLogin(e) {
   }
 }
 
-// Έλεγχος αν ο χρήστης είναι ήδη συνδεδεμένος
+// Έλεγχος σύνδεσης κατά τη φόρτωση
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
@@ -69,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Ζωντανός Συγχρονισμός με το Firestore
 function initLiveSync() {
-  // Ακροατής για τους Πελάτες
   db.collection('customers').onSnapshot(snapshot => {
     customers = snapshot.docs.map(doc => ({
       id: doc.id,
@@ -85,7 +97,6 @@ function initLiveSync() {
     console.error("Σφάλμα συγχρονισμού πελατών: ", error);
   });
 
-  // Ακροατής για τις Επισκέψεις
   db.collection('visits').onSnapshot(snapshot => {
     visits = snapshot.docs.map(doc => ({
       id: doc.id,
@@ -107,7 +118,6 @@ function updateStats() {
   if (visitElem) visitElem.innerText = visits.length;
 }
 
-// Λογική Αλλαγής Προβολών (Views)
 function showCustomerList() {
   document.getElementById('customerListView').classList.remove('hidden');
   document.getElementById('customerDetailView').classList.add('hidden');
@@ -123,7 +133,6 @@ function showCustomerDetail(id) {
   renderVisits();
 }
 
-// Προβολή Λίστας Πελατών
 function renderCustomers(filteredData = null) {
   const list = filteredData || customers;
   const container = document.getElementById('customerCardsContainer');
@@ -195,7 +204,6 @@ function filterCustomers() {
   renderCustomers(filtered);
 }
 
-// Προβολή Προφίλ Πελάτη
 function renderCustomerProfile() {
   const cust = customers.find(c => c.id === selectedCustomerId);
   if (!cust) return;
@@ -245,7 +253,6 @@ function renderCustomerProfile() {
   `;
 }
 
-// Προβολή Ιστορικού Επισκέψεων
 function renderVisits() {
   const container = document.getElementById('visitTimelineContainer');
   if (!container) return;
@@ -310,7 +317,6 @@ function renderVisits() {
   });
 }
 
-// Διαχείριση Παραθύρων (Modals) & Φορμών - Πελάτης
 function openCustomerModal() {
   document.getElementById('customerForm').reset();
   document.getElementById('custFormId').value = '';
@@ -380,7 +386,6 @@ async function handleSaveCustomer(e) {
   }
 }
 
-// Διαχείριση Παραθύρων (Modals) & Φορμών - Επίσκεψη
 function openVisitModal() {
   document.getElementById('visitForm').reset();
   document.getElementById('visitFormId').value = '';
@@ -478,7 +483,6 @@ async function handleSaveVisit(e) {
   }
 }
 
-// Χειρισμός Προβολής Εικόνων (Lightbox)
 function openLightbox(src) {
   document.getElementById('lightboxImg').src = src;
   document.getElementById('lightboxModal').classList.remove('hidden');
