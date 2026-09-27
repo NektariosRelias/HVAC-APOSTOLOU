@@ -64,21 +64,21 @@ async function handleCustomLogin(e) {
   }
 }
 
-// // Έλεγχος σύνδεσης κατά τη φόρτωση
-// document.addEventListener('DOMContentLoaded', () => {
-//   const loginForm = document.getElementById('loginForm');
-//   if (loginForm) {
-//     loginForm.addEventListener('submit', handleCustomLogin);
-//   }
+// Έλεγχος σύνδεσης κατά τη φόρτωση
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', handleCustomLogin);
+  }
 
-//   const loginModal = document.getElementById('loginModal');
-//   if (localStorage.getItem('isAuthenticated') === 'true') {
-//     if (loginModal) loginModal.classList.add('hidden');
-//     initLiveSync();
-//   } else {
-//     if (loginModal) loginModal.classList.remove('hidden');
-//   }
-// });
+  const loginModal = document.getElementById('loginModal');
+  if (localStorage.getItem('isAuthenticated') === 'true') {
+    if (loginModal) loginModal.classList.add('hidden');
+    initLiveSync();
+  } else {
+    if (loginModal) loginModal.classList.remove('hidden');
+  }
+});
 
 // Ζωντανός Συγχρονισμός με το Firestore
 function initLiveSync() {
