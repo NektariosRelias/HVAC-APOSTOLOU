@@ -15,7 +15,7 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 
 // Κρυπτογραφημένο Hash για τον κωδικό 2105 (Ασφαλές για το GitHub)
-const SAVED_PIN_HASH = "9c93522c01b6a1b55b7c5266b2a30f370ab84c4c53c39bdff5732fc565413494";
+const SAVED_PIN_HASH = "f22e379b33a5957d079eb7c84c8be1e6e96901869e9e6f3eb1d355efefbc6ebf";
 
 let customers = [];
 let visits = [];
@@ -40,7 +40,6 @@ async function hashPin(pin) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Συνάρτηση Ελέγχου Εισόδου
 async function handleCustomLogin(e) {
   if (e) e.preventDefault();
   
@@ -49,9 +48,7 @@ async function handleCustomLogin(e) {
   const loginError = document.getElementById('loginError');
   const loginModal = document.getElementById('loginModal');
 
-  const inputHash = await hashPin(password);
-
-  if (inputHash === SAVED_PIN_HASH) {
+  if (password === "2105") {
     localStorage.setItem('isAuthenticated', 'true');
     if (loginError) loginError.classList.add('hidden');
     if (loginModal) loginModal.classList.add('hidden');
