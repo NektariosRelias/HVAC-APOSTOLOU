@@ -142,7 +142,7 @@
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
         
-        <!-- Διόρθωση: grid-cols-1 στα κινητά για να μην καβαλάει το ένα το άλλο -->
+        <!-- Διορθωμένο: grid-cols-1 για αποφυγή επικαλύψεων σε κινητά -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
@@ -169,7 +169,7 @@
           <textarea id="visitFormAction" rows="2" placeholder="π.χ. Καθαρισμός με χημικό" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"></textarea>
         </div>
         
-        <!-- Διόρθωση: grid-cols-1 στα κινητά και αφαίρεση του capture για επιλογή από συλλογή ή κάμερα -->
+        <!-- Διορθωμένο: grid-cols-1 και ελεύθερο input χωρίς capture για επιλογή κάμερας/συλλογής -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Κόστος (€)</label>
@@ -177,7 +177,7 @@
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Φωτογραφία</label>
-            <input type="file" id="visitFormPhoto" accept="image/*" onchange="handlePhotoSelect(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
+            <input type="file" id="visitFormPhoto" onchange="handlePhotoSelect(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
           </div>
         </div>
 
