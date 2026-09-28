@@ -438,8 +438,9 @@ function handlePhotoSelect(e) {
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 800;
+        // Μειώνουμε τα όρια σε 600px ώστε το Base64 να χωράει πάντα άνετα στο Firestore (< 1MB)
+        const MAX_WIDTH = 600;
+        const MAX_HEIGHT = 600;
         let width = img.width;
         let height = img.height;
 
@@ -460,7 +461,8 @@ function handlePhotoSelect(e) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+        // Συμπίεση σε JPEG με ποιότητα 0.5 (50%) για ασφάλεια μεγέθους
+        tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
 
         document.getElementById('photoPreview').src = tempPhotoBase64;
         document.getElementById('photoPreviewContainer').classList.remove('hidden');

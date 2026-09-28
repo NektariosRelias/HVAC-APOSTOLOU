@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HVAC APOSTOLOU CRM</title>
   
-  <!-- PWA Manifest & Theme Color -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,16 +12,13 @@
   <meta name="apple-mobile-web-app-title" content="HVAC CRM">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Σύνδεση με το δικό σου αρχείο CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-10">
 
-  <!-- Header / Navbar -->
   <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30 shadow-lg px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3 cursor-pointer" onclick="showCustomerList()">
       <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md">
@@ -39,15 +35,13 @@
     </button>
   </header>
 
-  <!-- Main Container -->
   <main class="max-w-4xl w-full mx-auto p-4 flex-1">
 
-    <!-- View 1: Customer List & Search -->
     <section id="customerListView" class="space-y-4">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
         <input type="text" id="searchInput" oninput="filterCustomers()" placeholder="Αναζήτηση πελάτη (Όνομα, Τηλέφωνο, Διεύθυνση)..." 
-               class="w-full bg-slate-800 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm shadow-inner">
+                class="w-full bg-slate-800 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm shadow-inner">
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -70,7 +64,6 @@
       <div id="customerCardsContainer" class="space-y-3"></div>
     </section>
 
-    <!-- View 2: Customer Detail & Visit History -->
     <section id="customerDetailView" class="hidden space-y-5">
       <div class="flex items-center justify-between">
         <button onclick="showCustomerList()" class="text-slate-300 hover:text-white flex items-center gap-2 text-sm font-medium py-1 px-3 bg-slate-800 border border-slate-700 rounded-lg">
@@ -93,7 +86,6 @@
 
   </main>
 
-  <!-- Modal 1: Add/Edit Customer -->
   <div id="customerModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
@@ -132,7 +124,6 @@
     </div>
   </div>
 
-  <!-- Modal 2: Add/Edit Visit -->
   <div id="visitModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
@@ -149,13 +140,18 @@
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Τύπος Εργασίας *</label>
-            <select id="visitFormType" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
-              <option value="Σέρβις / Καθαρισμός">Σέρβις / Καθαρισμός</option>
-              <option value="Επισκευή Βλάβης">Επισκευή Βλάβης</option>
-              <option value="Πλήρωση Φρέον">Πλήρωση Φρέον</option>
-              <option value="Εγκατάσταση">Εγκατάσταση</option>
-              <option value="Έλεγχος">Έλεγχος</option>
-            </select>
+            <div class="relative">
+              <select id="visitFormType" required class="w-full appearance-none bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none pr-8">
+                <option value="Σέρβις / Καθαρισμός">Σέρβις / Καθαρισμός</option>
+                <option value="Επισκευή Βλάβης">Επισκευή Βλάβης</option>
+                <option value="Πλήρωση Φρέον">Πλήρωση Φρέον</option>
+                <option value="Εγκατάσταση">Εγκατάσταση</option>
+                <option value="Έλεγχος">Έλεγχος</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -192,12 +188,10 @@
     </div>
   </div>
 
-  <!-- Modal 3: Lightbox Image Viewer -->
   <div id="lightboxModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
     <img id="lightboxImg" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border border-slate-700" alt="Μεγεθυμένη φωτογραφία">
   </div>
 
-  <!-- Login Modal -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900 bg-opacity-95 z-50 flex items-center justify-center p-4">
     <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 max-w-sm w-full text-center shadow-xl">
       <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">❄️</div>
@@ -215,12 +209,10 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-  <!-- Main Application Script -->
   <script src="app.js"></script>
 </body>
 </html>
