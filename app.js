@@ -421,7 +421,7 @@ function editVisit(visitId) {
 }
 
 async function deleteVisit(visitId) {
-  if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την επίσκεψη;')) {
+  if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την επίσκεψη?')) {
     try {
       await db.collection('visits').doc(visitId).delete();
     } catch (error) {
@@ -460,7 +460,6 @@ function handlePhotoSelect(e) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Sympiesh se JPEG me poiotita 0.7 (70%) wste na einai < 1MB
         tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
         document.getElementById('photoPreview').src = tempPhotoBase64;
