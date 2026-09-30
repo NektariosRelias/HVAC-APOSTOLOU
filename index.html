@@ -21,13 +21,13 @@
   <link rel="stylesheet" href="style.css">
   
   <style>
-    /* Σμίκρυνση και προσαρμογή πεδίου ημερομηνίας ώστε να είναι μικρό σαν τα άλλα */
+    /* Αυστηρός περιορισμός πλάτους για το πεδίο ημερομηνίας σε όλες τις συσκευές */
     input[type="date"] {
       -webkit-appearance: none;
       appearance: none;
-      display: inline-block;
-      width: auto;
-      min-width: 180px;
+      width: 180px !important;
+      max-width: 100% !important;
+      display: inline-block !important;
     }
   </style>
 </head>
@@ -153,10 +153,10 @@
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
         
-        <!-- Το πεδίο ημερομηνίας πλέον είναι μικρό και κομψό -->
+        <!-- Πεδίο Ημερομηνίας με σταθερό μικρό πλάτος -->
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
-          <input type="date" id="visitFormDate" required class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+          <input type="date" id="visitFormDate" required class="w-48 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
         </div>
 
         <div>
