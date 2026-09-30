@@ -393,8 +393,23 @@ function openVisitModal() {
   document.getElementById('visitModal').classList.remove('hidden');
 }
 
+// Συνάρτηση για το κλείσιμο και τον καθαρισμό της φόρμας επίσκεψης
 function closeVisitModal() {
-  document.getElementById('visitModal').classList.add('hidden');
+  const modal = document.getElementById('visitModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+
+  const form = document.getElementById('visitForm');
+  if (form) {
+    form.reset();
+  }
+
+  tempPhotoBase64 = null;
+  const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+  if (photoPreviewContainer) {
+    photoPreviewContainer.classList.add('hidden');
+  }
 }
 
 function editVisit(visitId) {
@@ -479,8 +494,16 @@ function removePhoto() {
   document.getElementById('photoPreviewContainer').classList.add('hidden');
 }
 
+// Συνάρτηση αποθήκευσης επίσκεψης με αυτόματο κλείσιμο παραθύρου
 async function handleSaveVisit(e) {
   e.preventDefault();
+
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Αποθήκευση...";
+  }
+
   const id = document.getElementById('visitFormId').value;
   const date = document.getElementById('visitFormDate').value;
   const type = document.getElementById('visitFormType').value;
@@ -494,8 +517,8 @@ async function handleSaveVisit(e) {
     type,
     issue,
     action,
-    cost,
-    photo: tempPhotoBase64
+    cost: cost ? parseFloat(cost) : 0,
+    photo: tempPhotoBase64 || null
   };
 
   try {
@@ -504,9 +527,17 @@ async function handleSaveVisit(e) {
     } else {
       await db.collection('visits').add(visitData);
     }
+    
+    // Αὐτόματο κλείσιμο του modal παραθύρου μετά την επιτυχή αποθήκευση
     closeVisitModal();
   } catch (error) {
+    console.error("Σφάλμα αποθήκευσης:", error);
     alert("Σφάλμα κατά την αποθήκευση επίσκεψης: " + error.message);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Αποθήκευση Επίσκεψης";
+    }
   }
 }
 
