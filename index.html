@@ -21,21 +21,22 @@
   <link rel="stylesheet" href="style.css">
   
   <style>
-    /* Gia oles tis othones (Desktop / Tablet) */
-    input[type="date"] {
-      -webkit-appearance: none;
-      appearance: none;
-      display: inline-block !important;
-    }
+  /* Eidiko reset gia iOS Safari / iPhone */
+  input[type="date"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    display: block !important;
+    width: 100% !important;
+    min-height: 40px !important;
+    box-sizing: border-box !important;
+  }
 
-    /* Responsive mono gia kinita (othones eos 768px) */
-    @media (max-width: 768px) {
-      input[type="date"] {
-        width: 100px !important;     /* Put the exact mobile width here (p.ch. 130px - 150px) */
-        max-width: 100% !important;
-      }
-    }
-  </style>
+  /* Diorthosi tou keimenou mesa sto date input gia iPhone */
+  input[type="date"]::-webkit-date-and-time-value {
+    text-align: left !important;
+    margin: 0 !important;
+  }
+</style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-10">
 
@@ -159,11 +160,11 @@
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
         
-        <!-- Πεδίο Ημερομηνίας με σταθερό μικρό πλάτος -->
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
-          <input type="date" id="visitFormDate" required class="w-48 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
-        </div>
+        <!-- Periorismos mhkous xaris sto max-w-[140px] pou "kleidonei" to iPhone -->
+<div class="max-w-[140px] w-full">
+  <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
+  <input type="date" id="visitFormDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+</div>
 
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Τύπος Εργασίας *</label>
