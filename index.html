@@ -21,22 +21,18 @@
   <link rel="stylesheet" href="style.css">
   
   <style>
-  /* Eidiko reset gia iOS Safari / iPhone */
-  input[type="date"] {
-    -webkit-appearance: none !important;
-    appearance: none !important;
-    display: block !important;
-    width: 100% !important;
-    min-height: 100px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Diorthosi tou keimenou mesa sto date input gia iPhone */
-  input[type="date"]::-webkit-date-and-time-value {
-    text-align: left !important;
-    margin: 0 !important;
-  }
-</style>
+    /* Rithmisi gia na exei to date input tin idia symperifora kai ypsos me ta alla inputs */
+    input[type="date"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      min-height: 40px;
+    }
+    input[type="date"]::-webkit-date-and-time-value {
+      text-align: left !important;
+    }
+  </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-10">
 
@@ -65,7 +61,7 @@
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
         <input type="text" id="searchInput" oninput="filterCustomers()" placeholder="Αναζήτηση πελάτη (Όνομα, Τηλέφωνο, Διεύθυνση)..." 
-                class="w-full bg-slate-800 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm shadow-inner">
+               class="w-full bg-slate-800 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm shadow-inner">
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -160,17 +156,17 @@
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
         
-        <!-- Periorismos mhkous xaris sto max-w-[140px] pou "kleidonei" to iPhone -->
-<div class="max-w-[140px] w-full">
-  <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
-  <input type="date" id="visitFormDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
-</div>
+        <!-- Oloia pedia me 100% omoiformia platuos kai ypsous -->
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
+          <input type="date" id="visitFormDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+        </div>
 
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Τύπος Εργασίας *</label>
           <div class="relative w-full">
             <select id="visitFormType" required class="w-full appearance-none bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none pr-8">
-              <option value="Σέρβις / Καθαρισμός">Service / Καθαρισμός</option>
+              <option value="Σέρβις / Καθαρισμός">Σέρβις / Καθαρισμός</option>
               <option value="Επισκευή Βλάβης">Επισκευή Βλάβης</option>
               <option value="Πλήρωση Φρέον">Πλήρωση Φρέον</option>
               <option value="Εγκατάσταση">Εγκατάσταση</option>
@@ -194,11 +190,11 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="w-full min-w-0">
             <label class="block text-xs font-medium text-slate-300 mb-1">Κόστος (€)</label>
-            <input type="number" step="0.01" id="visitFormCost" placeholder="50.00" class="w-full box-border bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+            <input type="number" step="0.01" id="visitFormCost" placeholder="50.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
           </div>
           <div class="w-full min-w-0">
-            <label class="block text-xs font-medium text-slate-300 mb-1">Αρχείο / Φωτογραφία (Χωρίς όριο)</label>
-            <input type="file" id="visitFormPhoto" onchange="handlePhotoSelect(event)" class="w-full box-border bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
+            <label class="block text-xs font-medium text-slate-300 mb-1">Αρχείο / Φωτογραφία</label>
+            <input type="file" id="visitFormPhoto" onchange="handlePhotoSelect(event)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer">
           </div>
         </div>
 
