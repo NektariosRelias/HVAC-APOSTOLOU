@@ -447,47 +447,57 @@ async function deleteVisit(visitId) {
 
 function handlePhotoSelect(e) {
   const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        // Μέγιστη διάσταση 500px για εγγυημένο μέγεθος < 200KB στο Firestore
-        const MAX_WIDTH = 500;
-        const MAX_HEIGHT = 500;
-        let width = img.width;
-        let height = img.height;
+  if (!file) return;
 
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      
+      // Αυστηρή μείωση διαστάσεων σε 400px max
+      const MAX_SIZE = 400;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_SIZE) {
+          height = Math.round(height * (MAX_SIZE / width));
+          width = MAX_SIZE;
         }
+      } else {
+        if (height > MAX_SIZE) {
+          width = Math.round(width * (MAX_SIZE / height));
+          height = MAX_SIZE;
+        }
+      }
 
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
 
-        // Συμπίεση σε JPEG 40% ποιότητα για απόλυτη ασφάλεια μεγέθους
-        tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.4);
+      // Πρώτη συμπίεση σε JPEG 30%
+      let base64 = canvas.toDataURL('image/jpeg', 0.3);
 
-        const photoPreview = document.getElementById('photoPreview');
-        const photoPreviewContainer = document.getElementById('photoPreviewContainer');
-        if (photoPreview) photoPreview.src = tempPhotoBase64;
-        if (photoPreviewContainer) photoPreviewContainer.classList.remove('hidden');
-      };
-      img.src = evt.target.result;
+      // Διπλός έλεγχος ασφαλείας: Αν ξεπερνάει το όριο, υποδιπλασιάζουμε τις διαστάσεις
+      if (base64.length > 400000) {
+        canvas.width = Math.round(width / 2);
+        canvas.height = Math.round(height / 2);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        base64 = canvas.toDataURL('image/jpeg', 0.2);
+      }
+
+      tempPhotoBase64 = base64;
+      
+      const photoPreview = document.getElementById('photoPreview');
+      const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+      if (photoPreview) photoPreview.src = tempPhotoBase64;
+      if (photoPreviewContainer) photoPreviewContainer.classList.remove('hidden');
     };
-    reader.readAsDataURL(file);
-  }
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 function removePhoto() {
