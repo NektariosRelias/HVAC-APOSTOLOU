@@ -453,9 +453,9 @@ function handlePhotoSelect(e) {
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
-        // Μειώνουμε τα όρια σε 600px ώστε το Base64 να χωράει πάντα άνετα στο Firestore (< 1MB)
-        const MAX_WIDTH = 600;
-        const MAX_HEIGHT = 600;
+        // Μέγιστη διάσταση 500px για εγγυημένο μέγεθος < 200KB στο Firestore
+        const MAX_WIDTH = 500;
+        const MAX_HEIGHT = 500;
         let width = img.width;
         let height = img.height;
 
@@ -476,11 +476,13 @@ function handlePhotoSelect(e) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Συμπίεση σε JPEG με ποιότητα 0.5 (50%) για ασφάλεια μεγέθους
-        tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
+        // Συμπίεση σε JPEG 40% ποιότητα για απόλυτη ασφάλεια μεγέθους
+        tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.4);
 
-        document.getElementById('photoPreview').src = tempPhotoBase64;
-        document.getElementById('photoPreviewContainer').classList.remove('hidden');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+        if (photoPreview) photoPreview.src = tempPhotoBase64;
+        if (photoPreviewContainer) photoPreviewContainer.classList.remove('hidden');
       };
       img.src = evt.target.result;
     };
