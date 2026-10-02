@@ -451,13 +451,41 @@ function handlePhotoSelect(e) {
 
   const reader = new FileReader();
   reader.onload = function(evt) {
-    // Απευθείας ανάγνωση του αρχείου σε πλήρη (100%) ανάλυση και ποιότητα
-    tempPhotoBase64 = evt.target.result;
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      
+      // Όριο 1200px για εξαιρετική ανάλυση και καθαρότητα
+      const MAX_SIZE = 1200;
+      let width = img.width;
+      let height = img.height;
 
-    const photoPreview = document.getElementById('photoPreview');
-    const photoPreviewContainer = document.getElementById('photoPreviewContainer');
-    if (photoPreview) photoPreview.src = tempPhotoBase64;
-    if (photoPreviewContainer) photoPreviewContainer.classList.remove('hidden');
+      if (width > height) {
+        if (width > MAX_SIZE) {
+          height = Math.round(height * (MAX_SIZE / width));
+          width = MAX_SIZE;
+        }
+      } else {
+        if (height > MAX_SIZE) {
+          width = Math.round(width * (MAX_SIZE / height));
+          height = MAX_SIZE;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Συμπίεση σε JPEG 80% ποιότητα (μέγεθος ~200-400 KB, πάντα < 1 MB)
+      tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+
+      const photoPreview = document.getElementById('photoPreview');
+      const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+      if (photoPreview) photoPreview.src = tempPhotoBase64;
+      if (photoPreviewContainer) photoPreviewContainer.classList.remove('hidden');
+    };
+    img.src = evt.target.result;
   };
   reader.readAsDataURL(file);
 }
