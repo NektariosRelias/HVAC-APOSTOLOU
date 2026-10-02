@@ -21,16 +21,21 @@
   <link rel="stylesheet" href="style.css">
   
   <style>
-    /* Rithmisi gia na exei to date input tin idia symperifora kai ypsos me ta alla inputs */
+    /* Οριστική διόρθωση ύψους & εσωτερικού Safari picker */
     input[type="date"] {
-      -webkit-appearance: none;
-      appearance: none;
+      -webkit-appearance: none !important;
+      appearance: none !important;
       width: 100% !important;
+      height: 40px !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
       box-sizing: border-box !important;
-      min-height: 40px;
     }
     input[type="date"]::-webkit-date-and-time-value {
       text-align: left !important;
+      line-height: 40px !important;
+      min-height: 40px !important;
+      margin: 0 !important;
     }
   </style>
 </head>
@@ -156,7 +161,6 @@
       <form id="visitForm" onsubmit="handleSaveVisit(event)" class="space-y-3">
         <input type="hidden" id="visitFormId">
         
-        <!-- Oloia pedia me 100% omoiformia platuos kai ypsous -->
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Ημερομηνία *</label>
           <input type="date" id="visitFormDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
