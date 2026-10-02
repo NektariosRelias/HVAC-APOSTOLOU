@@ -455,8 +455,8 @@ function handlePhotoSelect(e) {
     img.onload = function() {
       const canvas = document.createElement('canvas');
       
-      // Όριο 1200px για εξαιρετική ανάλυση και καθαρότητα
-      const MAX_SIZE = 1200;
+      // Όριο 1000px για εξαιρετική ευκρίνεια
+      const MAX_SIZE = 1000;
       let width = img.width;
       let height = img.height;
 
@@ -477,8 +477,8 @@ function handlePhotoSelect(e) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // Συμπίεση σε JPEG 80% ποιότητα (μέγεθος ~200-400 KB, πάντα < 1 MB)
-      tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      // Συμπίεση JPEG στο 60% -> Μέγεθος αρχείου περίπου 150-250 KB (πάντα < 1 MB)
+      tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
 
       const photoPreview = document.getElementById('photoPreview');
       const photoPreviewContainer = document.getElementById('photoPreviewContainer');
