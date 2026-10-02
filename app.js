@@ -22,7 +22,11 @@ let visits = [];
 let selectedCustomerId = null;
 let tempPhotoBase64 = null;
 
-// Εγγραφή Service Worker για PWA
+/* ------------------------------------------------------------------
+   ΕΓΓΡΑΦΗ SERVICE WORKER (ΣΧΟΛΙΑΣΜΕΝΟ ΠΡΟΣΩΡΙΝΑ ΓΙΑ TESTING)
+   Ξεσχολίασέ το όταν τελειώσεις με τις αλλαγές στο UI/CSS.
+------------------------------------------------------------------ */
+/*
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -30,6 +34,7 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('Αποτυχία Service Worker', err));
   });
 }
+*/
 
 // Συνάρτηση μετατροπής σε SHA-256 Hash
 async function hashPin(pin) {
@@ -393,7 +398,6 @@ function openVisitModal() {
   document.getElementById('visitModal').classList.remove('hidden');
 }
 
-// Συνάρτηση για το κλείσιμο και τον καθαρισμό της φόρμας επίσκεψης
 function closeVisitModal() {
   const modal = document.getElementById('visitModal');
   if (modal) {
@@ -455,7 +459,6 @@ function handlePhotoSelect(e) {
     img.onload = function() {
       const canvas = document.createElement('canvas');
       
-      // Όριο 1000px για εξαιρετική ευκρίνεια
       const MAX_SIZE = 1000;
       let width = img.width;
       let height = img.height;
@@ -477,7 +480,6 @@ function handlePhotoSelect(e) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // Συμπίεση JPEG στο 60% -> Μέγεθος αρχείου περίπου 150-250 KB (πάντα < 1 MB)
       tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
 
       const photoPreview = document.getElementById('photoPreview');
@@ -496,7 +498,6 @@ function removePhoto() {
   document.getElementById('photoPreviewContainer').classList.add('hidden');
 }
 
-// Συνάρτηση αποθήκευσης επίσκεψης με αυτόματο κλείσιμο παραθύρου
 async function handleSaveVisit(e) {
   e.preventDefault();
 
@@ -530,7 +531,6 @@ async function handleSaveVisit(e) {
       await db.collection('visits').add(visitData);
     }
     
-    // Αὐτόματο κλείσιμο του modal παραθύρου μετά την επιτυχή αποθήκευση
     closeVisitModal();
   } catch (error) {
     console.error("Σφάλμα αποθήκευσης:", error);
