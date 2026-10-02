@@ -22,11 +22,7 @@ let visits = [];
 let selectedCustomerId = null;
 let tempPhotoBase64 = null;
 
-/* ------------------------------------------------------------------
-   ΕΓΓΡΑΦΗ SERVICE WORKER (ΣΧΟΛΙΑΣΜΕΝΟ ΠΡΟΣΩΡΙΝΑ ΓΙΑ TESTING)
-   Ξεσχολίασέ το όταν τελειώσεις με τις αλλαγές στο UI/CSS.
------------------------------------------------------------------- */
-/*
+// Εγγραφή Service Worker για PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -34,7 +30,6 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('Αποτυχία Service Worker', err));
   });
 }
-*/
 
 // Συνάρτηση μετατροπής σε SHA-256 Hash
 async function hashPin(pin) {
