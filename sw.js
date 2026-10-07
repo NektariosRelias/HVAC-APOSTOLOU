@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hvac-crm-v55';
+const CACHE_NAME = 'hvac-crm-v56';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
